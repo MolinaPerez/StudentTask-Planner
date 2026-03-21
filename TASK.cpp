@@ -44,3 +44,22 @@ string Task::getDueDate(){
 bool Task::isComplete(){
     return complete;
 }
+
+void Task::setTitle(string title){
+    this -> title = title;
+}
+void Task::setDescription(string description){
+    this -> description = description;
+}
+void Task::setCourse(string course){
+    this -> course = course;
+}
+void Task::setPriority(int priority){
+    this -> priority = priority;
+}
+void Task::setDueDate(int DueDate){
+    this -> DueDate = DueDate;
+}
+void Task::checkedComplete(){
+    complete = true;
+}
