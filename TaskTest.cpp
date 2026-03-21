@@ -15,3 +15,6 @@ int main() {
 
     return 0;
 }
+
+//g++ TaskTets.cpp TASK.cpp -o program
+// IN TERMINAL ./program
