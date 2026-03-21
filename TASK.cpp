@@ -14,7 +14,7 @@ Task::Task() { //No Parameters
 };
 
 Task::Task(int ID, std::string title, std::string description,
-           std::string course, int priority, std::string dueDate) {
+           std::string course, int priority, std::string DueDate) {
     this->ID = ID;
     this->title = title;
     this->description = description;
