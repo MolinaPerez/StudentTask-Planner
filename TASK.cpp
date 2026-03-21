@@ -1,4 +1,5 @@
 #include "TASK.h"
+#include <iostream>
 
 Task::Task() { //No Parameters
     ID = 0;
@@ -62,4 +63,15 @@ void Task::setDueDate(int DueDate){
 }
 void Task::checkedComplete(){
     complete = true;
+}
+
+void Task::show(){
+    cout << "[" << ID << "] " << title << "\n"
+     << "Course: " << course << "\n"
+     << "Description: " << description << "\n"
+     << "Priotiry: " << priority << "\n"
+     << "Due Date: " << DueDate << "\n"
+     << "State: " << (complete ? "Complete" : "To Do")
+     << endl;
+    
 }

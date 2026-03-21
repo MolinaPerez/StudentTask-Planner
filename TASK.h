@@ -34,7 +34,9 @@ class Task {
         void setDueDate(int DueDate);
         void checkedComplete();
 
+        //FOR TASK VIEWING
 
+        void show();
 };
 
 #endif
