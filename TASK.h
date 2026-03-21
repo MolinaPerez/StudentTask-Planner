@@ -1,5 +1,5 @@
 #ifndef TASK_H
-#define TASK    
+#define TASK_H    
 
 #include <string>
 using namespace std;
@@ -16,6 +16,8 @@ class Task {
 
     public: //Client will use this only
     Task();
+    Task(int ID, string title, string description, string course, 
+        int priority, string DueDate);
 };
 
 #endif
