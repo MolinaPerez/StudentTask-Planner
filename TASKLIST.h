@@ -19,7 +19,7 @@ public:
     Task removeTask();
     Task peekTask();
     bool searchTask(const Task &ID);
-    int setSize();
+    void setSize(int Size);
     int getSize();
 };
 
