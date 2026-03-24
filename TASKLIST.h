@@ -18,7 +18,8 @@ public:
     void addTask(const Task& t);
     Task removeTask();
     Task peekTask();
-    bool searchTask(const Task &ID);
+    void showList();
+    bool searchTask(Task &ID);
     void setSize(int Size);
     int getSize();
 };
