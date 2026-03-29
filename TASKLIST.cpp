@@ -1,15 +1,19 @@
 #include "TASKLIST.h"
 #include <stdexcept>
-TaskList::TaskList() {}
+TaskList::TaskList() {
+    head = nullptr;
+    size = 0;
+}
+
 TaskList::TaskList(const TaskList& other) {
     head = nullptr;
     size = 0;
 
-    Node* current = other.head;
-    while (current != nullptr) {
+    Node* ptr = other.head;
+    while (ptr != nullptr) {
         Node* newNode = new Node;
-        newNode->data = current->data;
-        newNode->next = current->next;
+        newNode->data = ptr->data;
+        newNode->next = nullptr;
 
         if(head == nullptr) {
             head = newNode;
@@ -23,7 +27,7 @@ TaskList::TaskList(const TaskList& other) {
         }
         
         size++;
-        current = current->next;
+        ptr = ptr->next;
     }
 }
 
