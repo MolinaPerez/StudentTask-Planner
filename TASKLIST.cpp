@@ -102,14 +102,15 @@ TaskList::TaskList(const TaskList& other) {
         }
     }
 
-    bool TaskList::searchTask(Task &t) {
+    bool TaskList::searchTask(int& ID) {
         if (head == nullptr) {
             throw std::underflow_error("List is empty");
         }
-        
+        Task t;
         Node* ptr = head;
         while (ptr != nullptr) {
-            if(ptr->data.getID() == t.getID()) {
+            t = this->peekTask();
+            if(ptr->data.getID() == t.getID() && ID == t.getID()) {
                 return true;
             }
             ptr = ptr->next;
