@@ -29,15 +29,26 @@ int main (){
         cout << "4. Search for a Specific Task" << endl;
         cout << "5. See Planner History (Not Working Currently)" << endl;
         cout << "6. Close planner" << endl << endl;
-        cout << "What would you like to do? (Type 1-5)" << endl;
+        cout << "What would you like to do? (Type 1-5) : " ;
 
-        cin >> option;
+        while (!(cin >> option) || (option < 1 || option > 6)) {
+            cout << endl;
+            cout << "Invalid Input" << endl << "Try Again: ";
+            cin.clear();
+            cin.ignore(1000, '\n');
+        }
+
         switch (option)
         {
             case 1: {
                 cout << "Add task properties: ";
                 cout << endl << "ID: ";
-                cin >> ID;
+                while (!(cin >> ID)) {
+                    cout << endl;
+                    cout << "Invalid Input" << endl << "Try Again: ";
+                    cin.clear();
+                    cin.ignore(1000, '\n');
+                }
 
                 cin.ignore(1000, '\n');
                 cout << endl << "Title: ";
@@ -50,7 +61,12 @@ int main (){
                 getline(cin, title);
 
                 cout << endl << "Priority: ";
-                cin >> priority;
+                while (!(cin >> priority)) {
+                    cout << endl;
+                    cout << "Invalid Input" << endl << "Try Again: ";
+                    cin.clear();
+                    cin.ignore(1000, '\n');
+                }
 
                 cin.ignore(1000, '\n');
                 cout << endl << "Due Date: " << endl;
@@ -74,6 +90,12 @@ int main (){
             case 4: {
                 cout << "Enter ID: ";
                 cin >> ID;
+                while (!(cin >> ID)) {
+                    cout << endl;
+                    cout << "Invalid Input" << endl << "Try Again: ";
+                    cin.clear();
+                    cin.ignore(1000, '\n');
+                }
                 if(list.searchTask(ID))
                     cout << "Task ID found";
                 break;
@@ -91,7 +113,13 @@ int main (){
         }
 
         cout << "Would you like to do more? (Y/N)" << endl;
-        cin >> loop;
+        while (!(cin >> loop) || !(loop == "y" || loop == "Y" || loop == "n" || loop == "N")) {
+            cout << endl;
+            cout << "Invalid Input" << endl << "Try Again: ";
+            cin.clear();
+            cin.ignore(1000, '\n');
+        }
+
     } while (loop == "y" || loop == "Y");
     return 0;
 }
