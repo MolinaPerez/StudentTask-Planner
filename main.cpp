@@ -20,6 +20,8 @@ int main (){
     int ID = 0, priority = 0;
     string title = "", description = "", course = "",  dueDate = "";
     TaskList list;
+    
+    cout << "Welcome to Sort & Sweet. Your personal academic task planner." << endl << "Let's get started!" << endl << endl;
     do {
         cout << "Welcome to Sort & Sweet. Your personal academic task planner." << endl << "Let's get started!" << endl << endl;
         cout << "Consider the following for your planner: " << endl;
