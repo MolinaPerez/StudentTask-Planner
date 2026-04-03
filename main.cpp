@@ -21,9 +21,9 @@ int main (){
     string title = "", description = "", course = "",  dueDate = "";
     TaskList list;
     
-    cout << "Welcome to Sort & Sweet. Your personal academic task planner." << endl << "Let's get started!" << endl << endl;
+    cout << "Welcome to Sort & Sweet. Your personal academic task planner." << endl << "Let's get started!" << endl;
     do {
-        cout << "Welcome to Sort & Sweet. Your personal academic task planner." << endl << "Let's get started!" << endl << endl;
+        cout << endl;
         cout << "Consider the following for your planner: " << endl;
         cout << "1. Add a Task" << endl;
         cout << "2. Remove a Task" << endl;
@@ -123,5 +123,7 @@ int main (){
         }
 
     } while (loop == "y" || loop == "Y");
+
+    cout << endl << "Thank you for your time";
     return 0;
 }
