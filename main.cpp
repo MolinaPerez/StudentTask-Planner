@@ -60,7 +60,7 @@ int main (){
                 getline(cin, description);
 
                 cout << endl << "course: ";
-                getline(cin, title);
+                getline(cin, course);
 
                 cout << endl << "Priority: ";
                 while (!(cin >> priority)) {
