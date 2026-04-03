@@ -31,7 +31,7 @@ class Task {
         void setDescription(string description);
         void setCourse(string course);
         void setPriority(int priority);
-        void setDueDate(int DueDate);
+        void setDueDate(string DueDate);
         void checkedComplete();
 
         //FOR TASK VIEWING
