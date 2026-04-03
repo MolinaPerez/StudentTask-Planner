@@ -123,5 +123,7 @@ int main (){
         }
 
     } while (loop == "y" || loop == "Y");
+
+    cout << endl << "Thank you for your time";
     return 0;
 }
