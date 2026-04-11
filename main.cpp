@@ -35,7 +35,7 @@ int main (){
 
         while (!(cin >> option) || (option < 1 || option > 6)) {
             cout << endl;
-            cout << "Invalid Input" << endl << "Try Again: ";
+            cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
             cin.clear();
             cin.ignore(1000, '\n');
         }
@@ -47,7 +47,7 @@ int main (){
                 cout << endl << "ID: ";
                 while (!(cin >> ID)) {
                     cout << endl;
-                    cout << "Invalid Input" << endl << "Try Again: ";
+                    cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
                     cin.clear();
                     cin.ignore(1000, '\n');
                 }
@@ -65,7 +65,7 @@ int main (){
                 cout << endl << "Priority: ";
                 while (!(cin >> priority)) {
                     cout << endl;
-                    cout << "Invalid Input" << endl << "Try Again: ";
+                    cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
                     cin.clear();
                     cin.ignore(1000, '\n');
                 }
@@ -82,7 +82,15 @@ int main (){
             }
 
             case 2: {
-                list.removeTask();
+                cout << "Enter ID of Undesired Task: ";
+                while (!(cin >> ID)) {
+                    cout << endl;
+                    cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
+                    cin.clear();
+                    cin.ignore(1000, '\n');
+                }
+                list.removeTask(ID);
+                cout << endl << "Task Removed Successfully" << endl;
                 break;
             }
             case 3: {
@@ -91,15 +99,14 @@ int main (){
             }
             case 4: {
                 cout << "Enter ID: ";
-                cin >> ID;
                 while (!(cin >> ID)) {
                     cout << endl;
-                    cout << "Invalid Input" << endl << "Try Again: ";
+                    cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
                     cin.clear();
                     cin.ignore(1000, '\n');
                 }
                 if(list.searchTask(ID))
-                    cout << "Task ID found";
+                    cout << "Task ID found" << endl;
                 break;
             }
             case 5: {
@@ -113,17 +120,7 @@ int main (){
             default:
                 break;
         }
-
-        cout << "Would you like to do more? (Y/N)" << endl;
-        while (!(cin >> loop) || !(loop == "y" || loop == "Y" || loop == "n" || loop == "N")) {
-            cout << endl;
-            cout << "Invalid Input" << endl << "Try Again: ";
-            cin.clear();
-            cin.ignore(1000, '\n');
-        }
-
-    } while (loop == "y" || loop == "Y");
-
-    cout << endl << "Thank you for your time";
+    } while (option != 6);
+    cout << endl << "Thank you for your time" << endl;
     return 0;
 }
