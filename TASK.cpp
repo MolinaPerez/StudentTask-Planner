@@ -58,7 +58,7 @@ void Task::setCourse(string course){
 void Task::setPriority(int priority){
     this -> priority = priority;
 }
-void Task::setDueDate(int DueDate){
+void Task::setDueDate(string DueDate){
     this -> DueDate = DueDate;
 }
 void Task::checkedComplete(){
