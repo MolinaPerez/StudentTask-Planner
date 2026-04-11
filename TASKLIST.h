@@ -16,7 +16,7 @@ public:
     TaskList();
     TaskList(const TaskList& other);
     void addTask(const Task& t);
-    Task removeTask();
+    Task removeTask(int &ID);
     Task peekTask();
     void showList();
     bool searchTask(int& ID);
