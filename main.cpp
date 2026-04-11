@@ -89,12 +89,30 @@ int main (){
                     cin.clear();
                     cin.ignore(1000, '\n');
                 }
-                list.removeTask(ID);
-                cout << endl << "Task Removed Successfully" << endl;
+                try {
+                    list.removeTask(ID);
+                    cout << endl << "Task Removed Successfully" << endl;
+                }  
+                catch (const std::underflow_error& e) {
+                    cout << "Error: " << e.what() << endl;
+                } 
+                catch (const std::invalid_argument& e) {
+                    cout << "Error: " << e.what() << endl;
+                }
+            
                 break;
             }
             case 3: {
-                list.showList();
+                try {
+                    list.showList();
+                }
+                catch (const std::underflow_error& e) {
+                    cout << "Error: " << e.what() << endl;
+                } 
+                catch (const std::invalid_argument& e) {
+                    cout << "Error: " << e.what() << endl;
+                }
+                
                 break;
             }
             case 4: {
@@ -105,8 +123,19 @@ int main (){
                     cin.clear();
                     cin.ignore(1000, '\n');
                 }
-                if(list.searchTask(ID))
-                    cout << "Task ID found" << endl;
+                try {
+                    if(list.searchTask(ID))
+                        cout << "Task ID found" << endl;
+                    else
+                        cout << "Task ID not found" << endl;
+                }
+                catch (const std::underflow_error& e) {
+                    cout << "Error: " << e.what() << endl;
+                } 
+                catch (const std::invalid_argument& e) {
+                    cout << "Error: " << e.what() << endl;
+                }
+
                 break;
             }
             case 5: {
