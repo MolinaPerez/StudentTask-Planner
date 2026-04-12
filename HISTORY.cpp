@@ -5,7 +5,14 @@ History::History(){
     undoTop = nullptr;
     redoTop = nullptr;
 }
-History::~History(){}
+History::~History(){
+    while (undoTop != nullptr){
+        actionNode* temp = undoTop;
+        undoTop = undoTop->next;
+        delete temp;
+    }
+    clearRedo();
+}
 
 void History::clearRedo(){
     while (redoTop != nullptr){
@@ -13,7 +20,6 @@ void History::clearRedo(){
         redoTop = redoTop->next;
         delete temp;
     }
-    clearRedo();
 }
 
 void History::record(string action, const Task &t){
