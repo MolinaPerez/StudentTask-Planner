@@ -1,5 +1,6 @@
 #include "TASKLIST.h"
 #include <stdexcept>
+
 TaskList::TaskList() {
     head = nullptr;
     size = 0;
@@ -31,107 +32,107 @@ TaskList::TaskList(const TaskList& other) {
     }
 }
 
-    void TaskList::addTask(const Task& t){
-        Node* newNode = new Node;
-        newNode->data = t;
-        newNode->next = nullptr;
+void TaskList::addTask(const Task& t){
+    Node* newNode = new Node;
+    newNode->data = t;
+    newNode->next = nullptr;
 
-        if (head == nullptr) {
-            head = newNode;
+    if (head == nullptr) {
+        head = newNode;
+    }
+    else {
+        Node* tail = head;
+        while(tail->next != nullptr) {
+            tail = tail->next;
         }
-        else {
-            Node* tail = head;
-            while(tail->next != nullptr) {
-                tail = tail->next;
-            }
-            tail->next =newNode;
-        }
-        size++;
+        tail->next =newNode;
+    }
+    size++;
+}
+
+Task TaskList::removeTask(int &ID) {
+    if (head == nullptr) {
+        throw std::underflow_error("List is empty");
     }
 
-    Task TaskList::removeTask(int &ID) {
-        if (head == nullptr) {
-            throw std::underflow_error("List is empty");
-        }
+    /*if (head->next == nullptr){
+        Task removedTask = head->data;
+        delete head;
+        head = nullptr;
+        
+        size--;
+        
+        return removedTask;
+    }*/
 
-        /*if (head->next == nullptr){
-            Task removedTask = head->data;
-            delete head;
-            head = nullptr;
-            
-            size--;
-            
-            return removedTask;
-        }*/
+    if (head->data.getID() == ID) {
+        Task removedTask = head->data;
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+        size--;
+        return removedTask;
+    }
 
-        if (head->data.getID() == ID) {
-            Task removedTask = head->data;
-            Node* temp = head;
-            head = head->next;
+    Node* ptr = head;
+    while(ptr->next != nullptr){
+        if(ptr->next->data.getID() == ID){
+            Task removedTask = ptr->next->data;
+            Node* temp = ptr->next;
+            ptr->next = temp->next;
             delete temp;
             size--;
             return removedTask;
         }
+        ptr = ptr->next;
+    }
+    throw std::invalid_argument("Task ID not found");
+}
 
-        Node* ptr = head;
-        while(ptr->next != nullptr){
-            if(ptr->next->data.getID() == ID){
-                Task removedTask = ptr->next->data;
-                Node* temp = ptr->next;
-                ptr->next = temp->next;
-                delete temp;
-                size--;
-                return removedTask;
-            }
-            ptr = ptr->next;
-        }
-        throw std::invalid_argument("Task ID not found");
+Task TaskList::peekTask() {
+    if (head == nullptr) {
+        throw std::underflow_error("List is empty");
     }
 
-    Task TaskList::peekTask() {
-        if (head == nullptr) {
-            throw std::underflow_error("List is empty");
-        }
-
-        Node* ptr = head;
-        while(ptr->next != nullptr) {
-            ptr = ptr->next;
-        }
-
-        return ptr->data;
+    Node* ptr = head;
+    while(ptr->next != nullptr) {
+        ptr = ptr->next;
     }
 
-    void TaskList::showList() {
-        if (head == nullptr) {
-            throw std::underflow_error("List is empty");
-        }
+    return ptr->data;
+}
 
-        Node* ptr = head;
-        while (ptr != nullptr) {
-            ptr->data.show();
-            ptr = ptr->next;
-        }
+void TaskList::showList() {
+    if (head == nullptr) {
+        throw std::underflow_error("List is empty");
     }
 
-    bool TaskList::searchTask(int& ID) {
-        if (head == nullptr) {
-            throw std::underflow_error("List is empty");
-        }
-        Task t;
-        Node* ptr = head;
-        while (ptr != nullptr) {
-            if (ptr->data.getID() == ID) {
-                return true;
-        } 
-            ptr = ptr->next;
-        }
-        return false;
+    Node* ptr = head;
+    while (ptr != nullptr) {
+        ptr->data.show();
+        ptr = ptr->next;
     }
+}
 
-    void TaskList::setSize(int Size) {
-        size = Size;
+bool TaskList::searchTask(int& ID) {
+    if (head == nullptr) {
+        throw std::underflow_error("List is empty");
     }
+    Task t;
+    Node* ptr = head;
+    while (ptr != nullptr) {
+        if (ptr->data.getID() == ID) {
+            return true;
+    } 
+        ptr = ptr->next;
+    }
+    return false;
+}
 
-    int TaskList::getSize() {
-        return size;
-    }
+void TaskList::setSize(int Size) {
+    size = Size;
+}
+
+int TaskList::getSize() {
+    return size;
+}
