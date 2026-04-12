@@ -21,6 +21,7 @@ int main (){
     int ID = 0, priority = 0;
     string title = "", description = "", course = "",  dueDate = "";
     TaskList list;
+    History history;
     
     cout << "Welcome to Sort & Sweet. Your personal academic task planner." << endl << "Let's get started!" << endl;
     do {
@@ -78,7 +79,7 @@ int main (){
 
                 Task task (ID, title, description, course, priority, dueDate);
                 list.addTask(task);
-                
+                history.record("ADD", task);
                 break;
             }
 
@@ -91,8 +92,9 @@ int main (){
                     cin.ignore(1000, '\n');
                 }
                 try {
-                    list.removeTask(ID);
+                   Task removed = list.removeTask(ID);
                     cout << endl << "Task Removed Successfully" << endl;
+                    history.record("REMOVE", removed);
                 }  
                 catch (const std::underflow_error& e) {
                     cout << "Error: " << e.what() << endl;
@@ -100,9 +102,11 @@ int main (){
                 catch (const std::invalid_argument& e) {
                     cout << "Error: " << e.what() << endl;
                 }
-            
+                
+
                 break;
             }
+
             case 3: {
                 try {
                     list.showList();
@@ -116,6 +120,7 @@ int main (){
 
                 break;
             }
+
             case 4: {
                 cout << "Enter ID: ";
                 while (!(cin >> ID)) {
@@ -139,14 +144,17 @@ int main (){
 
                 break;
             }
+
             case 5: {
                 
                 break;
             }
+
             case 6: {
                 cout << endl << "Thank you for your time" << endl;
                 return 0;
             }
+
             default:
                 break;
         }
