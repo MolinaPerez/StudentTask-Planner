@@ -2,6 +2,7 @@
 #include <string>
 #include "TASK.h"
 #include "TASKLIST.h"
+#include "HISTORY.h"
 
 using namespace std;
 
@@ -112,7 +113,7 @@ int main (){
                 catch (const std::invalid_argument& e) {
                     cout << "Error: " << e.what() << endl;
                 }
-                
+
                 break;
             }
             case 4: {
