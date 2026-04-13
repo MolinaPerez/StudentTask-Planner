@@ -2,6 +2,7 @@
 #include <string>
 #include "TASK.h"
 #include "TASKLIST.h"
+#include "HISTORY.h"
 
 using namespace std;
 
@@ -16,10 +17,11 @@ int main (){
     cout << " \\______/  \\______/ |__/         \\___/         \\____/\\_/       \\______/  \\_____/\\___/  \\_______/ \\_______/   \\___/" << endl << endl << endl;                                                                                                            
 
     string loop = "";
-    int option = 0;
+    int option = 0, option2 = 0;
     int ID = 0, priority = 0;
     string title = "", description = "", course = "",  dueDate = "";
     TaskList list;
+    History history;
     
     cout << "Welcome to Sort & Sweet. Your personal academic task planner." << endl << "Let's get started!" << endl;
     do {
@@ -29,13 +31,13 @@ int main (){
         cout << "2. Remove a Task" << endl;
         cout << "3. See Full Planner" << endl;
         cout << "4. Search for a Specific Task" << endl;
-        cout << "5. See Planner History (Not Working Currently)" << endl;
+        cout << "5. See Planner History" << endl;
         cout << "6. Close planner" << endl << endl;
-        cout << "What would you like to do? (Type 1-5) : " ;
+        cout << "What would you like to do? (Type 1-6) : " ;
 
         while (!(cin >> option) || (option < 1 || option > 6)) {
             cout << endl;
-            cout << "Invalid Input" << endl << "Try Again: ";
+            cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
             cin.clear();
             cin.ignore(1000, '\n');
         }
@@ -47,7 +49,7 @@ int main (){
                 cout << endl << "ID: ";
                 while (!(cin >> ID)) {
                     cout << endl;
-                    cout << "Invalid Input" << endl << "Try Again: ";
+                    cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
                     cin.clear();
                     cin.ignore(1000, '\n');
                 }
@@ -65,65 +67,156 @@ int main (){
                 cout << endl << "Priority: ";
                 while (!(cin >> priority)) {
                     cout << endl;
-                    cout << "Invalid Input" << endl << "Try Again: ";
+                    cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
                     cin.clear();
                     cin.ignore(1000, '\n');
                 }
 
                 cin.ignore(1000, '\n');
-                cout << endl << "Due Date: " << endl;
+                cout << endl << "Due Date: ";
                 getline(cin, dueDate);
                 cout << endl;
 
                 Task task (ID, title, description, course, priority, dueDate);
                 list.addTask(task);
-                
+                history.record("ADD", task);
                 break;
             }
 
             case 2: {
-                list.removeTask();
-                break;
-            }
-            case 3: {
-                list.showList();
-                break;
-            }
-            case 4: {
-                cout << "Enter ID: ";
-                cin >> ID;
+                cout << "Enter ID of Undesired Task: ";
                 while (!(cin >> ID)) {
                     cout << endl;
-                    cout << "Invalid Input" << endl << "Try Again: ";
+                    cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
                     cin.clear();
                     cin.ignore(1000, '\n');
                 }
-                if(list.searchTask(ID))
-                    cout << "Task ID found";
-                break;
-            }
-            case 5: {
+                try {
+                   Task removed = list.removeTask(ID);
+                    cout << endl << "Task Removed Successfully" << endl;
+                    history.record("REMOVE", removed);
+                }  
+                catch (const std::underflow_error& e) {
+                    cout << "Error: " << e.what() << endl;
+                } 
+                catch (const std::invalid_argument& e) {
+                    cout << "Error: " << e.what() << endl;
+                }
                 
+
                 break;
             }
+
+            case 3: {
+                try {
+                    list.showList();
+                }
+                catch (const std::underflow_error& e) {
+                    cout << "Error: " << e.what() << endl;
+                } 
+                catch (const std::invalid_argument& e) {
+                    cout << "Error: " << e.what() << endl;
+                }
+
+                break;
+            }
+
+            case 4: {
+                cout << "Enter ID: ";
+                while (!(cin >> ID)) {
+                    cout << endl;
+                    cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
+                    cin.clear();
+                    cin.ignore(1000, '\n');
+                }
+                try {
+                    if(list.searchTask(ID))
+                        cout << "Task ID found" << endl;
+                    else
+                        cout << "Task ID not found" << endl;
+                }
+                catch (const std::underflow_error& e) {
+                    cout << "Error: " << e.what() << endl;
+                } 
+                catch (const std::invalid_argument& e) {
+                    cout << "Error: " << e.what() << endl;
+                }
+
+                break;
+            }
+
+            case 5: {
+                do {
+                    try {
+                        history.showHistory();
+                    }
+                    catch (const std::underflow_error& e) {
+                        cout << "Error: " << e.what() << endl;
+                    } 
+                    catch (const std::invalid_argument& e) {
+                        cout << "Error: " << e.what() << endl;
+                    }
+
+                    cout << endl << "Do you wish to make any changes?" << endl;
+                    cout << "1. Undo Last Change" << endl;
+                    cout << "2. Redo the undoing" << endl;
+                    cout << "3. Leave History Settings" << endl;
+                    cout << "Type your choice: ";
+                    
+                    while (!(cin >> option2) || (option2 < 1 || option2 > 3)) {
+                        cout << endl;
+                        cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
+                        cin.clear();
+                        cin.ignore(1000, '\n');
+                    }
+
+                    switch (option2) {
+                        case 1:
+                            try {
+                                if (history.canUndo())
+                                    history.undo(list);
+                                else
+                                    cout << "History is empty" << endl;
+                            }
+                            catch (const std::underflow_error& e) {
+                                cout << "Error: " << e.what() << endl;
+                            }
+                            catch (const std::invalid_argument& e) {
+                                cout << "Error: " << e.what() << endl;
+                            }
+                            break;
+
+                        case 2:
+                            try {
+                                if(history.canRedo())
+                                    history.redo(list);
+                                else
+                                    cout << "Nothing to Redo" << endl;
+                            }
+                            catch (const std::underflow_error& e) {
+                                cout << "Error: " << e.what() << endl;
+                            } 
+                            catch (const std::invalid_argument& e) {
+                                cout << "Error: " << e.what() << endl;
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
+                } while (option2 != 3);
+                break;
+            }
+
             case 6: {
                 cout << endl << "Thank you for your time" << endl;
                 return 0;
             }
+
             default:
                 break;
         }
-
-        cout << "Would you like to do more? (Y/N)" << endl;
-        while (!(cin >> loop) || !(loop == "y" || loop == "Y" || loop == "n" || loop == "N")) {
-            cout << endl;
-            cout << "Invalid Input" << endl << "Try Again: ";
-            cin.clear();
-            cin.ignore(1000, '\n');
-        }
-
-    } while (loop == "y" || loop == "Y");
-
-    cout << endl << "Thank you for your time";
+    } while (option != 6);
+    cout << endl << "Thank you for your time" << endl;
     return 0;
 }

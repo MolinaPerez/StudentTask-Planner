@@ -58,7 +58,7 @@ void Task::setCourse(string course){
 void Task::setPriority(int priority){
     this -> priority = priority;
 }
-void Task::setDueDate(int DueDate){
+void Task::setDueDate(string DueDate){
     this -> DueDate = DueDate;
 }
 void Task::checkedComplete(){
@@ -69,7 +69,7 @@ void Task::show(){
     cout << "[" << ID << "] " << title << "\n"
      << "Course: " << course << "\n"
      << "Description: " << description << "\n"
-     << "Priotiry: " << priority << "\n"
+     << "Priority: " << priority << "\n"
      << "Due Date: " << DueDate << "\n"
      << "State: " << (complete ? "Complete" : "To Do")
      << endl;
