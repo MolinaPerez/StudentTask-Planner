@@ -69,7 +69,7 @@ void Task::show(){
     cout << "[" << ID << "] " << title << "\n"
      << "Course: " << course << "\n"
      << "Description: " << description << "\n"
-     << "Priotiry: " << priority << "\n"
+     << "Priority: " << priority << "\n"
      << "Due Date: " << DueDate << "\n"
      << "State: " << (complete ? "Complete" : "To Do")
      << endl;
