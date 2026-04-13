@@ -1,5 +1,6 @@
 #include "HISTORY.h"
 #include <stdexcept>
+#include <iostream>
 
 History::History(){
     undoTop = nullptr;
@@ -94,4 +95,18 @@ bool History::canRedo(){
     if(redoTop != nullptr)
         return true;
     return false;
+}
+
+void History::showHistory(){
+    if(undoTop == nullptr){
+        throw std::underflow_error("History is empty");
+    }
+
+    actionNode* ptr = undoTop;
+    while (ptr != nullptr){
+        cout << endl;
+        cout << "Action : " << ptr->action << endl;
+        ptr->data.show();
+        ptr = ptr->next;
+    }
 }

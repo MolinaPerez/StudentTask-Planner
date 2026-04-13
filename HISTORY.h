@@ -25,6 +25,7 @@ public:
     void clearRedo();
     bool canUndo();
     bool canRedo();
+    void showHistory();
 };
 
 #endif
