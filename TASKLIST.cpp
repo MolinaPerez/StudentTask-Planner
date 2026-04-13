@@ -1,5 +1,6 @@
 #include "TASKLIST.h"
 #include <stdexcept>
+#include <iostream>
 
 TaskList::TaskList() {
     head = nullptr;
@@ -109,6 +110,7 @@ void TaskList::showList() {
 
     Node* ptr = head;
     while (ptr != nullptr) {
+        cout << endl;
         ptr->data.show();
         ptr = ptr->next;
     }
