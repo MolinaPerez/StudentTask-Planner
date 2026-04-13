@@ -17,7 +17,7 @@ int main (){
     cout << " \\______/  \\______/ |__/         \\___/         \\____/\\_/       \\______/  \\_____/\\___/  \\_______/ \\_______/   \\___/" << endl << endl << endl;                                                                                                            
 
     string loop = "";
-    int option = 0;
+    int option = 0, option2 = 0;
     int ID = 0, priority = 0;
     string title = "", description = "", course = "",  dueDate = "";
     TaskList list;
@@ -73,7 +73,7 @@ int main (){
                 }
 
                 cin.ignore(1000, '\n');
-                cout << endl << "Due Date: " << endl;
+                cout << endl << "Due Date: ";
                 getline(cin, dueDate);
                 cout << endl;
 
@@ -146,15 +146,65 @@ int main (){
             }
 
             case 5: {
-                try {
-                    history.showHistory();
-                }
-                catch (const std::underflow_error& e) {
-                    cout << "Error: " << e.what() << endl;
-                } 
-                catch (const std::invalid_argument& e) {
-                    cout << "Error: " << e.what() << endl;
-                }
+                do {
+                    try {
+                        history.showHistory();
+                    }
+                    catch (const std::underflow_error& e) {
+                        cout << "Error: " << e.what() << endl;
+                    } 
+                    catch (const std::invalid_argument& e) {
+                        cout << "Error: " << e.what() << endl;
+                    }
+
+                    cout << endl << "Do you wish to make any changes?" << endl;
+                    cout << "1. Undo Last Change" << endl;
+                    cout << "2. Redo the undoing" << endl;
+                    cout << "3. Leave History Settings" << endl;
+                    cout << "Type your choice: ";
+                    
+                    while (!(cin >> option2) || (option2 < 1 || option2 > 3)) {
+                        cout << endl;
+                        cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
+                        cin.clear();
+                        cin.ignore(1000, '\n');
+                    }
+
+                    switch (option2) {
+                        case 1:
+                            try {
+                                if (history.canUndo())
+                                    history.undo(list);
+                                else
+                                    cout << "History is empty" << endl;
+                            }
+                            catch (const std::underflow_error& e) {
+                                cout << "Error: " << e.what() << endl;
+                            }
+                            catch (const std::invalid_argument& e) {
+                                cout << "Error: " << e.what() << endl;
+                            }
+                            break;
+
+                        case 2:
+                            try {
+                                if(history.canRedo())
+                                    history.redo(list);
+                                else
+                                    cout << "Nothing to Redo" << endl;
+                            }
+                            catch (const std::underflow_error& e) {
+                                cout << "Error: " << e.what() << endl;
+                            } 
+                            catch (const std::invalid_argument& e) {
+                                cout << "Error: " << e.what() << endl;
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
+                } while (option2 != 3);
                 break;
             }
 
