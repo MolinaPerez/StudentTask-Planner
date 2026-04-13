@@ -31,9 +31,9 @@ int main (){
         cout << "2. Remove a Task" << endl;
         cout << "3. See Full Planner" << endl;
         cout << "4. Search for a Specific Task" << endl;
-        cout << "5. See Planner History (Not Working Currently)" << endl;
+        cout << "5. See Planner History" << endl;
         cout << "6. Close planner" << endl << endl;
-        cout << "What would you like to do? (Type 1-5) : " ;
+        cout << "What would you like to do? (Type 1-6) : " ;
 
         while (!(cin >> option) || (option < 1 || option > 6)) {
             cout << endl;
@@ -146,7 +146,15 @@ int main (){
             }
 
             case 5: {
-                
+                try {
+                    history.showHistory();
+                }
+                catch (const std::underflow_error& e) {
+                    cout << "Error: " << e.what() << endl;
+                } 
+                catch (const std::invalid_argument& e) {
+                    cout << "Error: " << e.what() << endl;
+                }
                 break;
             }
 
