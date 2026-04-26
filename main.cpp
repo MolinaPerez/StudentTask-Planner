@@ -3,6 +3,7 @@
 #include "TASK.h"
 #include "TASKLIST.h"
 #include "HISTORY.h"
+#include "HASHTABLE.h"
 
 using namespace std;
 
@@ -22,6 +23,7 @@ int main (){
     string title = "", description = "", course = "",  dueDate = "";
     TaskList list;
     History history;
+    HashTable hash;   // parallel structure: mirrors 'list', used for O(1) ID search
     
     cout << "Welcome to Sort & Sweet. Your personal academic task planner." << endl << "Let's get started!" << endl;
     do {
@@ -79,6 +81,7 @@ int main (){
 
                 Task task (ID, title, description, course, priority, dueDate);
                 list.addTask(task);
+                hash.insert(task);          // keep hash in sync
                 history.record("ADD", task);
                 break;
             }
@@ -93,9 +96,10 @@ int main (){
                 }
                 try {
                    Task removed = list.removeTask(ID);
+                    hash.remove(ID);            // keep hash in sync
                     cout << endl << "Task Removed Successfully" << endl;
                     history.record("REMOVE", removed);
-                }  
+                }
                 catch (const std::underflow_error& e) {
                     cout << "Error: " << e.what() << endl;
                 } 
@@ -129,17 +133,13 @@ int main (){
                     cin.clear();
                     cin.ignore(1000, '\n');
                 }
-                try {
-                    if(list.searchTask(ID))
-                        cout << "Task ID found" << endl;
-                    else
-                        cout << "Task ID not found" << endl;
-                }
-                catch (const std::underflow_error& e) {
-                    cout << "Error: " << e.what() << endl;
-                } 
-                catch (const std::invalid_argument& e) {
-                    cout << "Error: " << e.what() << endl;
+                // O(1) average-time lookup via the hash table.
+                Task found;
+                if (hash.search(ID, found)) {
+                    cout << endl << "Task found:" << endl;
+                    found.show();
+                } else {
+                    cout << endl << "Task ID not found" << endl;
                 }
 
                 break;
@@ -174,7 +174,7 @@ int main (){
                         case 1:
                             try {
                                 if (history.canUndo())
-                                    history.undo(list);
+                                    history.undo(list, hash);
                                 else
                                     cout << "History is empty" << endl;
                             }
@@ -189,7 +189,7 @@ int main (){
                         case 2:
                             try {
                                 if(history.canRedo())
-                                    history.redo(list);
+                                    history.redo(list, hash);
                                 else
                                     cout << "Nothing to Redo" << endl;
                             }
