@@ -29,7 +29,7 @@ bool isValidDate(string d) {
         }
     }
 
-    // Pull out day, month, year as numbers
+    // Pulling out day, month, year as numbers
     int day   = stoi(d.substr(0, 2));   // first 2 chars
     int month = stoi(d.substr(3, 2));   // chars 3 and 4
     int year  = stoi(d.substr(6, 4));   // chars 6 through 9
