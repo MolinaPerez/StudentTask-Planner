@@ -3,8 +3,82 @@
 #include "TASK.h"
 #include "TASKLIST.h"
 #include "HISTORY.h"
+#include "HASHTABLE.h"
 
 using namespace std;
+
+// DD/MM/YYYY format (e.g., "30/04/2026")
+// Returns true only if the format is correct AND it's a real calendar date.
+bool isValidDate(string d) {
+    // Must be exactly 10 characters
+    if (d.length() != 10) {
+        return false;
+    }
+
+    // Slashes must be in positions 2 and 5
+    if (d[2] != '/' || d[5] != '/') {
+        return false;
+    }
+
+    // Every other position must be a digit '0'..'9'
+    for (int i = 0; i < 10; i++) {
+        if (i != 2 && i != 5) {
+            if (d[i] < '0' || d[i] > '9') {
+                return false;
+            }
+        }
+    }
+
+    // Pulling out day, month, year as numbers
+    int day   = stoi(d.substr(0, 2));   // first 2 chars
+    int month = stoi(d.substr(3, 2));   // chars 3 and 4
+    int year  = stoi(d.substr(6, 4));   // chars 6 through 9
+
+    // Month must be 1-12
+    if (month < 1 || month > 12) {
+        return false;
+    }
+
+    // Day must be at least 1
+    if (day < 1) {
+        return false;
+    }
+
+    // Figure out how many days the month has
+    int maxDay = 31;   // default for Jan, Mar, May, Jul, Aug, Oct, Dec
+
+    // WEIRD MONTHS
+    if (month == 4 || month == 6 || month == 9 || month == 11) {
+        maxDay = 30;   // April, June, September, November
+    }
+    else if (month == 2) {
+        // February: depends on leap year
+        bool isLeap = false;
+        if (year % 400 == 0) {
+            isLeap = true;
+        }
+        else if (year % 100 == 0) {
+            isLeap = false;
+        }
+        else if (year % 4 == 0) {
+            isLeap = true;
+        }
+
+        if (isLeap) {
+            maxDay = 29;
+        }
+        else {
+            maxDay = 28;
+        }
+    }
+
+    // Day must not be more than the month allows - VALIDATION
+    if (day > maxDay) {
+        return false;
+    }
+
+    return true;
+}
 
 int main (){
     cout << "  /$$$$$$                        /$$            /$$$            /$$$$$$                                      /$$" << endl;
@@ -22,6 +96,7 @@ int main (){
     string title = "", description = "", course = "",  dueDate = "";
     TaskList list;
     History history;
+    HashTable hash;   // parallel structure: mirrors 'list', used for O(1) ID search
     
     cout << "Welcome to Sort & Sweet. Your personal academic task planner." << endl << "Let's get started!" << endl;
     do {
@@ -64,21 +139,28 @@ int main (){
                 cout << endl << "course: ";
                 getline(cin, course);
 
-                cout << endl << "Priority: ";
-                while (!(cin >> priority)) {
+                cout << endl << "Priority (1=High, 2=Medium, 3=Low): ";
+                while (!(cin >> priority) || priority < 1 || priority > 3) {
                     cout << endl;
-                    cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
+                    cout << "Invalid input. Priority must be 1, 2, or 3." << endl << "Try Again: ";
                     cin.clear();
                     cin.ignore(1000, '\n');
                 }
 
                 cin.ignore(1000, '\n');
-                cout << endl << "Due Date: ";
+                cout << endl << "Due Date (DD/MM/YYYY): ";
                 getline(cin, dueDate);
+                while (!isValidDate(dueDate)) {
+                    cout << endl;
+                    cout << "Invalid date. Use DD/MM/YYYY (30/04/2026)." << endl
+                         << "Try Again: ";
+                    getline(cin, dueDate);
+                }
                 cout << endl;
 
                 Task task (ID, title, description, course, priority, dueDate);
                 list.addTask(task);
+                hash.insert(task);          // keep hash in sync
                 history.record("ADD", task);
                 break;
             }
@@ -93,9 +175,10 @@ int main (){
                 }
                 try {
                    Task removed = list.removeTask(ID);
+                    hash.remove(ID);            // keep hash in sync
                     cout << endl << "Task Removed Successfully" << endl;
                     history.record("REMOVE", removed);
-                }  
+                }
                 catch (const std::underflow_error& e) {
                     cout << "Error: " << e.what() << endl;
                 } 
@@ -129,17 +212,13 @@ int main (){
                     cin.clear();
                     cin.ignore(1000, '\n');
                 }
-                try {
-                    if(list.searchTask(ID))
-                        cout << "Task ID found" << endl;
-                    else
-                        cout << "Task ID not found" << endl;
-                }
-                catch (const std::underflow_error& e) {
-                    cout << "Error: " << e.what() << endl;
-                } 
-                catch (const std::invalid_argument& e) {
-                    cout << "Error: " << e.what() << endl;
+                // O(1) average-time lookup via the hash table.
+                Task found;
+                if (hash.search(ID, found)) {
+                    cout << endl << "Task found:" << endl;
+                    found.show();
+                } else {
+                    cout << endl << "Task ID not found" << endl;
                 }
 
                 break;
@@ -174,7 +253,7 @@ int main (){
                         case 1:
                             try {
                                 if (history.canUndo())
-                                    history.undo(list);
+                                    history.undo(list, hash);
                                 else
                                     cout << "History is empty" << endl;
                             }
@@ -189,7 +268,7 @@ int main (){
                         case 2:
                             try {
                                 if(history.canRedo())
-                                    history.redo(list);
+                                    history.redo(list, hash);
                                 else
                                     cout << "Nothing to Redo" << endl;
                             }

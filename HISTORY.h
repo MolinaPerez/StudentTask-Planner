@@ -3,6 +3,7 @@
 
 #include "TASK.h"
 #include "TASKLIST.h"
+#include "HASHTABLE.h"
 
 struct actionNode{
     string action;
@@ -20,8 +21,9 @@ public:
     ~History();
 
     void record(string action, const Task &t);
-    bool undo(TaskList& t);
-    bool redo(TaskList& t);
+    // undo/redo now take the HashTable too so the hash stays in sync with tasklist.
+    bool undo(TaskList& t, HashTable& h);
+    bool redo(TaskList& t, HashTable& h);
     void clearRedo();
     bool canUndo();
     bool canRedo();

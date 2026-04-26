@@ -33,19 +33,21 @@ void History::record(string action, const Task &t){
     undoTop = newNode;
 }
 
-bool History::undo(TaskList& list){
+bool History::undo(TaskList& list, HashTable& hash){
     if (undoTop == nullptr) {
         return false;
     }
 
     actionNode* temp= undoTop;
-    
-    if (undoTop->action == "ADD") {
+
+    if (undoTop->action == "ADD") {  // Undoing an ADD = remove the task from BOTH structures.
         int ID = undoTop->data.getID();
         list.removeTask(ID);
+        hash.remove(ID);
     }
-    else if (undoTop->action == "REMOVE"){
+    else if (undoTop->action == "REMOVE"){ // Undoing a REMOVE = put the task back in BOTH structures.
         list.addTask(undoTop->data);
+        hash.insert(undoTop->data);
     }
 
     actionNode* redoNode = new actionNode;
@@ -59,21 +61,23 @@ bool History::undo(TaskList& list){
     return true;
 }
 
-bool History::redo(TaskList& list){
+bool History::redo(TaskList& list, HashTable& hash){
     if(redoTop == nullptr){
         return false;
     }
 
     actionNode* temp = redoTop;
 
-    if (redoTop->action == "ADD") {
+    if (redoTop->action == "ADD") { // Redoing an ADD = re-add to BOTH structures.
         list.addTask(redoTop->data);
+        hash.insert(redoTop->data);
     }
     else if (redoTop->action == "REMOVE") {
         int ID = redoTop->data.getID();
         list.removeTask(ID);
+        hash.remove(ID);
     }
-
+    // Redoing a REMOVE = remove from BOTH structures.
     actionNode* undoNode = new actionNode;
     undoNode->action = redoTop->action;
     undoNode->data = redoTop-> data;
