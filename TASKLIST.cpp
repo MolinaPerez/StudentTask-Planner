@@ -7,6 +7,18 @@ TaskList::TaskList() {
     size = 0;
 }
 
+// Walk the list and delete every node so we don't leak memory.
+TaskList::~TaskList() {
+    Node* ptr = head;
+    while (ptr != nullptr) {
+        Node* temp = ptr;
+        ptr = ptr->next;
+        delete temp;
+    }
+    head = nullptr;
+    size = 0;
+}
+
 TaskList::TaskList(const TaskList& other) {
     head = nullptr;
     size = 0;
@@ -51,7 +63,8 @@ void TaskList::addTask(const Task& t){
     size++;
 }
 
-Task TaskList::removeTask(int &ID) {
+// Take ID by value (no '&') so callers can pass a literal like removeTask(5).
+Task TaskList::removeTask(int ID) {
     if (head == nullptr) {
         throw std::underflow_error("List is empty");
     }
@@ -116,16 +129,14 @@ void TaskList::showList() {
     }
 }
 
-bool TaskList::searchTask(int& ID) {
-    if (head == nullptr) {
-        throw std::underflow_error("List is empty");
-    }
-    Task t;
+// Take ID by value, and treat an empty list as a normal "not found" (return false)
+// instead of throwing -- matches HashTable::search and is what callers expect.
+bool TaskList::searchTask(int ID) {
     Node* ptr = head;
     while (ptr != nullptr) {
         if (ptr->data.getID() == ID) {
             return true;
-    } 
+        }
         ptr = ptr->next;
     }
     return false;

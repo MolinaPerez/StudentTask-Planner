@@ -129,6 +129,18 @@ int main (){
                     cin.ignore(1000, '\n');
                 }
 
+                // Reject IDs that are already used so the list and the hash never get out of sync.
+                while (hash.contains(ID)) {
+                    cout << endl;
+                    cout << "ID " << ID << " already exists. Pick a different one: ";
+                    while (!(cin >> ID)) {
+                        cout << endl;
+                        cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
+                        cin.clear();
+                        cin.ignore(1000, '\n');
+                    }
+                }
+
                 cin.ignore(1000, '\n');
                 cout << endl << "Title: ";
                 getline(cin, title);
