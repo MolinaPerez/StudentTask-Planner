@@ -15,11 +15,12 @@ private:
 public:
     TaskList();
     TaskList(const TaskList& other);
+    ~TaskList();                       // free all nodes when the list is destroyed (fixes memory leak)
     void addTask(const Task& t);
-    Task removeTask(int &ID);
+    Task removeTask(int ID);           // take ID by value so callers can pass a literal like removeTask(5)
     Task peekTask();
     void showList();
-    bool searchTask(int& ID);
+    bool searchTask(int ID);           // take ID by value so callers can pass a literal
     void setSize(int Size);
     int getSize();
 };
