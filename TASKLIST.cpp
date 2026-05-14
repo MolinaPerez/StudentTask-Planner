@@ -130,8 +130,8 @@ void TaskList::showList() {
 }
 
 // Print tasks sorted by priority WITHOUT touching the list.
-// Walk the list 3 times, once per priority level (1=High, 2=Medium, 3=Low).
-// Inside each priority, tasks keep their original insertion order.
+// Traverse the list 3 times, once per priority level.
+// Inside each priority, tasks keep their original insertion order for refernce.
 void TaskList::showByPriority() {
     if (head == nullptr) {
         throw std::underflow_error("List is empty");
@@ -150,7 +150,6 @@ void TaskList::showByPriority() {
 }
 
 // Take ID by value, and treat an empty list as a normal "not found" (return false)
-// instead of throwing -- matches HashTable::search and is what callers expect.
 bool TaskList::searchTask(int ID) {
     Node* ptr = head;
     while (ptr != nullptr) {
