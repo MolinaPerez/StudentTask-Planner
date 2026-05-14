@@ -204,7 +204,8 @@ int main (){
 
             case 3: {
                 try {
-                    list.showList();
+                    // Show the planner sorted by priority (does NOT modify the list).
+                    list.showByPriority();
                 }
                 catch (const std::underflow_error& e) {
                     cout << "Error: " << e.what() << endl;

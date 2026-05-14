@@ -129,6 +129,26 @@ void TaskList::showList() {
     }
 }
 
+// Print tasks sorted by priority WITHOUT touching the list.
+// Walk the list 3 times, once per priority level (1=High, 2=Medium, 3=Low).
+// Inside each priority, tasks keep their original insertion order.
+void TaskList::showByPriority() {
+    if (head == nullptr) {
+        throw std::underflow_error("List is empty");
+    }
+
+    for (int p = 1; p <= 3; p++) {
+        Node* ptr = head;
+        while (ptr != nullptr) {
+            if (ptr->data.getPriority() == p) {
+                cout << endl;
+                ptr->data.show();
+            }
+            ptr = ptr->next;
+        }
+    }
+}
+
 // Take ID by value, and treat an empty list as a normal "not found" (return false)
 // instead of throwing -- matches HashTable::search and is what callers expect.
 bool TaskList::searchTask(int ID) {

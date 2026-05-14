@@ -20,6 +20,7 @@ public:
     Task removeTask(int ID);           // take ID by value so callers can pass a literal like removeTask(5)
     Task peekTask();
     void showList();
+    void showByPriority();             // print tasks sorted by priority (1->3) without modifying the list
     bool searchTask(int ID);           // take ID by value so callers can pass a literal
     void setSize(int Size);
     int getSize();
