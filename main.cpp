@@ -4,6 +4,7 @@
 #include "TASKLIST.h"
 #include "HISTORY.h"
 #include "HASHTABLE.h"
+#include "TASKGRAPH.h"
 
 using namespace std;
 
@@ -97,6 +98,7 @@ int main (){
     TaskList list;
     History history;
     HashTable hash;   // parallel structure: mirrors 'list', used for O(1) ID search
+    TaskGraph taskGraph;   // grafo de dependencias entre tareas (hito #4)
     
     cout << "Welcome to Sort & Sweet. Your personal academic task planner." << endl << "Let's get started!" << endl;
     do {
@@ -107,10 +109,13 @@ int main (){
         cout << "3. See Full Planner" << endl;
         cout << "4. Search for a Specific Task" << endl;
         cout << "5. See Planner History" << endl;
-        cout << "6. Close planner" << endl << endl;
-        cout << "What would you like to do? (Type 1-6) : " ;
+        cout << "6. Mark a Task as Completed" << endl;
+        cout << "7. Add a Dependency between Tasks" << endl;
+        cout << "8. Show Dependency Graph" << endl;
+        cout << "9. Close planner" << endl << endl;
+        cout << "What would you like to do? (Type 1-9) : " ;
 
-        while (!(cin >> option) || (option < 1 || option > 6)) {
+        while (!(cin >> option) || (option < 1 || option > 9)) {
             cout << endl;
             cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
             cin.clear();
@@ -122,9 +127,9 @@ int main (){
             case 1: {
                 cout << "Add task properties: ";
                 cout << endl << "ID: ";
-                while (!(cin >> ID)) {
+                while (!(cin >> ID) || ID < 0) {
                     cout << endl;
-                    cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
+                    cout << "Invalid Input. Expecting non-negative Integer" << endl << "Try Again: ";
                     cin.clear();
                     cin.ignore(1000, '\n');
                 }
@@ -133,9 +138,9 @@ int main (){
                 while (hash.contains(ID)) {
                     cout << endl;
                     cout << "ID " << ID << " already exists. Pick a different one: ";
-                    while (!(cin >> ID)) {
+                    while (!(cin >> ID) || ID < 0) {
                         cout << endl;
-                        cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
+                        cout << "Invalid Input. Expecting non-negative Integer" << endl << "Try Again: ";
                         cin.clear();
                         cin.ignore(1000, '\n');
                     }
@@ -179,15 +184,18 @@ int main (){
 
             case 2: {
                 cout << "Enter ID of Undesired Task: ";
-                while (!(cin >> ID)) {
+                while (!(cin >> ID) || ID < 0) {
                     cout << endl;
-                    cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
+                    cout << "Invalid Input. Expecting non-negative Integer" << endl << "Try Again: ";
                     cin.clear();
                     cin.ignore(1000, '\n');
                 }
                 try {
                    Task removed = list.removeTask(ID);
-                    hash.remove(ID);            // keep hash in sync
+                    hash.remove(ID);                       // keep hash in sync
+                    // NO se limpia el grafo aqui: dejamos las aristas vivas para que
+                    // el undo del REMOVE pueda restaurarlas gratis. Si el usuario nunca
+                    // hace undo, queda basura visual en el grafo (asumido).
                     cout << endl << "Task Removed Successfully" << endl;
                     history.record("REMOVE", removed);
                 }
@@ -204,7 +212,8 @@ int main (){
 
             case 3: {
                 try {
-                    list.showList();
+                    // Show the planner sorted by priority (does NOT modify the list).
+                    list.showByPriority();
                 }
                 catch (const std::underflow_error& e) {
                     cout << "Error: " << e.what() << endl;
@@ -218,9 +227,9 @@ int main (){
 
             case 4: {
                 cout << "Enter ID: ";
-                while (!(cin >> ID)) {
+                while (!(cin >> ID) || ID < 0) {
                     cout << endl;
-                    cout << "Invalid Input. Expecting Integer" << endl << "Try Again: ";
+                    cout << "Invalid Input. Expecting non-negative Integer" << endl << "Try Again: ";
                     cin.clear();
                     cin.ignore(1000, '\n');
                 }
@@ -265,7 +274,7 @@ int main (){
                         case 1:
                             try {
                                 if (history.canUndo())
-                                    history.undo(list, hash);
+                                    history.undo(list, hash, taskGraph);
                                 else
                                     cout << "History is empty" << endl;
                             }
@@ -280,7 +289,7 @@ int main (){
                         case 2:
                             try {
                                 if(history.canRedo())
-                                    history.redo(list, hash);
+                                    history.redo(list, hash, taskGraph);
                                 else
                                     cout << "Nothing to Redo" << endl;
                             }
@@ -300,6 +309,68 @@ int main (){
             }
 
             case 6: {
+                // Marcar tarea como completada SOLO si todos sus prereqs estan listos.
+                cout << "Enter ID of task to mark as completed: ";
+                while (!(cin >> ID) || ID < 0) {
+                    cout << endl;
+                    cout << "Invalid Input. Expecting non-negative Integer" << endl << "Try Again: ";
+                    cin.clear();
+                    cin.ignore(1000, '\n');
+                }
+                Task found;
+                if (!hash.search(ID, found)) {
+                    cout << endl << "Task ID not found" << endl;
+                    break;
+                }
+                // Verificar prerrequisitos antes de marcar
+                if (!taskGraph.canComplete(ID, hash)) {
+                    cout << endl << "No se puede completar [" << ID << "] todavia." << endl;
+                    cout << "Te falta terminar:" << endl;
+                    taskGraph.showMissingPrereqs(ID, hash);
+                    break;
+                }
+                found.checkedComplete();
+                hash.insert(found);          // sobrescribe en hash
+                list.markComplete(ID);       // actualiza tambien en la lista
+                cout << endl << "Task [" << ID << "] marked as completed" << endl;
+                break;
+            }
+
+            case 7: {
+                // anadir dependencia: taskID depende de prereqID
+                int prereqID = 0;
+                cout << "Add Dependency" << endl;
+                cout << "Task ID (la que depende): ";
+                while (!(cin >> ID) || ID < 0) {
+                    cout << endl;
+                    cout << "Invalid Input. Expecting non-negative Integer" << endl << "Try Again: ";
+                    cin.clear();
+                    cin.ignore(1000, '\n');
+                }
+                cout << "Prereq ID (la que debe hacerse primero): ";
+                while (!(cin >> prereqID) || prereqID < 0) {
+                    cout << endl;
+                    cout << "Invalid Input. Expecting non-negative Integer" << endl << "Try Again: ";
+                    cin.clear();
+                    cin.ignore(1000, '\n');
+                }
+
+                if (taskGraph.addDependency(ID, prereqID, hash)) {
+                    cout << endl << "Dependency added: [" << ID << "] -> [" << prereqID << "]" << endl;
+                } else {
+                    cout << endl << "Dependency rejected (misma ID, ID inexistente, duplicado, o cierra ciclo)" << endl;
+                }
+                break;
+            }
+
+            case 8: {
+                // Mostrar grafo de dependencias
+                cout << endl;
+                taskGraph.showGraph(hash);
+                break;
+            }
+
+            case 9: {
                 cout << endl << "Thank you for your time" << endl;
                 return 0;
             }
@@ -307,7 +378,7 @@ int main (){
             default:
                 break;
         }
-    } while (option != 6);
+    } while (option != 9);
     cout << endl << "Thank you for your time" << endl;
     return 0;
 }

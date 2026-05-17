@@ -33,21 +33,22 @@ void History::record(string action, const Task &t){
     undoTop = newNode;
 }
 
-bool History::undo(TaskList& list, HashTable& hash){
+bool History::undo(TaskList& list, HashTable& hash, TaskGraph& graph){ //Also included taskgarph for dependencies
     if (undoTop == nullptr) {
         return false;
     }
 
     actionNode* temp= undoTop;
 
-    if (undoTop->action == "ADD") {  // Undoing an ADD = remove the task from BOTH structures.
+    if (undoTop->action == "ADD") {  // Deshacer un ADD = quitar la tarea de las 3 estructuras.
         int ID = undoTop->data.getID();
         list.removeTask(ID);
         hash.remove(ID);
+        graph.removeAllInvolving(ID);   // limpiar fantasmas en el grafo (fix bug #1 y #2)
     }
-    else if (undoTop->action == "REMOVE"){ // Undoing a REMOVE = put the task back in BOTH structures.
-        list.addTask(undoTop->data);
-        hash.insert(undoTop->data);
+    else if (undoTop->action == "REMOVE"){ // Deshacer un REMOVE = poner la tarea de vuelta.
+        list.addTask(undoTop->data);     // El grafo no se toca: como REMOVE no lo limpio,
+        hash.insert(undoTop->data);        //Siguen existiendo los prereqs de la tarea no se borran.
     }
 
     actionNode* redoNode = new actionNode;
@@ -61,23 +62,23 @@ bool History::undo(TaskList& list, HashTable& hash){
     return true;
 }
 
-bool History::redo(TaskList& list, HashTable& hash){
+bool History::redo(TaskList& list, HashTable& hash, TaskGraph& graph){
     if(redoTop == nullptr){
         return false;
     }
 
     actionNode* temp = redoTop;
 
-    if (redoTop->action == "ADD") { // Redoing an ADD = re-add to BOTH structures.
-        list.addTask(redoTop->data);
-        hash.insert(redoTop->data);
+    if (redoTop->action == "ADD") { // Rehacer un ADD = re-agregar a list y hash.
+        list.addTask(redoTop->data);   // El grafo no se toca: ya estaba limpio
+        hash.insert(redoTop->data);    // desde el undo previo.
     }
     else if (redoTop->action == "REMOVE") {
         int ID = redoTop->data.getID();
         list.removeTask(ID);
         hash.remove(ID);
+        graph.removeAllInvolving(ID);   // re-quitar fantasmas del grafo (TAreas que se quedan colgantes por ciertos prereqs)
     }
-    // Redoing a REMOVE = remove from BOTH structures.
     actionNode* undoNode = new actionNode;
     undoNode->action = redoTop->action;
     undoNode->data = redoTop-> data;

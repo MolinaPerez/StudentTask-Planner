@@ -4,6 +4,7 @@
 #include "TASK.h"
 #include "TASKLIST.h"
 #include "HASHTABLE.h"
+#include "TASKGRAPH.h"
 
 struct actionNode{
     string action;
@@ -21,9 +22,9 @@ public:
     ~History();
 
     void record(string action, const Task &t);
-    // undo/redo now take the HashTable too so the hash stays in sync with tasklist.
-    bool undo(TaskList& t, HashTable& h);
-    bool redo(TaskList& t, HashTable& h);
+    // undo/redo reciben tambien el grafo para mantener todo sincronizado. (TaskGraph)
+    bool undo(TaskList& t, HashTable& h, TaskGraph& g);
+    bool redo(TaskList& t, HashTable& h, TaskGraph& g);
     void clearRedo();
     bool canUndo();
     bool canRedo();

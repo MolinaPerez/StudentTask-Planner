@@ -129,8 +129,41 @@ void TaskList::showList() {
     }
 }
 
+// Print tasks sorted by priority WITHOUT touching the list.
+// Traverse the list 3 times, once per priority level.
+// Inside each priority, tasks keep their original insertion order for refernce.
+void TaskList::showByPriority() {
+    if (head == nullptr) {
+        throw std::underflow_error("List is empty");
+    }
+
+    for (int p = 1; p <= 3; p++) {
+        Node* ptr = head;
+        while (ptr != nullptr) {
+            if (ptr->data.getPriority() == p) {
+                cout << endl;
+                ptr->data.show();
+            }
+            ptr = ptr->next;
+        }
+    }
+}
+
+// Busca la tarea por ID y la marca como completa dentro del nodo
+// Devuelve true si la encontro, false si no existia.
+bool TaskList::markComplete(int ID) {
+    Node* ptr = head;
+    while (ptr != nullptr) {
+        if (ptr->data.getID() == ID) {
+            ptr->data.checkedComplete();
+            return true;
+        }
+        ptr = ptr->next;
+    }
+    return false;
+}
+
 // Take ID by value, and treat an empty list as a normal "not found" (return false)
-// instead of throwing -- matches HashTable::search and is what callers expect.
 bool TaskList::searchTask(int ID) {
     Node* ptr = head;
     while (ptr != nullptr) {
