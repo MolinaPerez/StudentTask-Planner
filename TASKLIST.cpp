@@ -149,6 +149,20 @@ void TaskList::showByPriority() {
     }
 }
 
+// Busca la tarea por ID y la marca como completa dentro del nodo
+// Devuelve true si la encontro, false si no existia.
+bool TaskList::markComplete(int ID) {
+    Node* ptr = head;
+    while (ptr != nullptr) {
+        if (ptr->data.getID() == ID) {
+            ptr->data.checkedComplete();
+            return true;
+        }
+        ptr = ptr->next;
+    }
+    return false;
+}
+
 // Take ID by value, and treat an empty list as a normal "not found" (return false)
 bool TaskList::searchTask(int ID) {
     Node* ptr = head;

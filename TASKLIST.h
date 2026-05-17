@@ -22,6 +22,7 @@ public:
     void showList();
     void showByPriority();             // print tasks sorted by priority (1->3) without modifying
     bool searchTask(int ID);           // take ID by value so callers can pass a literal
+    bool markComplete(int ID);         // marca una tarea como completa dentro de la lista
     void setSize(int Size);
     int getSize();
 };
