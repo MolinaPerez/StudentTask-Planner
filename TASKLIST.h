@@ -2,6 +2,7 @@
 #define TASKLIST_H
 
 #include "TASK.h"
+#include <iosfwd>
 struct Node {
     Task data;
     Node* next;
@@ -23,6 +24,7 @@ public:
     void showByPriority();             // print tasks sorted by priority (1->3) without modifying
     bool searchTask(int ID);           // take ID by value so callers can pass a literal
     bool markComplete(int ID);         // marca una tarea como completa dentro de la lista
+    void saveToFile(std::ostream& out);// escribe cada tarea como linea "TASK|...|"
     void setSize(int Size);
     int getSize();
 };

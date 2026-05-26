@@ -149,6 +149,22 @@ void TaskList::showByPriority() {
     }
 }
 
+// Escribe todas las tareas al stream, una por linea, formato:
+// TASK|id|title|description|course|priority|dueDate|complete(0/1)
+void TaskList::saveToFile(std::ostream& out) {
+    Node* ptr = head;
+    while (ptr != nullptr) {
+        out << "TASK|" << ptr->data.getID() << "|"
+            << ptr->data.getTitle() << "|"
+            << ptr->data.getDescription() << "|"
+            << ptr->data.getCourse() << "|"
+            << ptr->data.getPriority() << "|"
+            << ptr->data.getDueDate() << "|"
+            << (ptr->data.isComplete() ? 1 : 0) << "\n";
+        ptr = ptr->next;
+    }
+}
+
 // Busca la tarea por ID y la marca como completa dentro del nodo
 // Devuelve true si la encontro, false si no existia.
 bool TaskList::markComplete(int ID) {
