@@ -194,6 +194,19 @@ void TaskGraph::showGraph(HashTable& hash) {
         node = node->next;
     }
 }
+// Escribe cada arista del grafo al stream, una por linea: DEP|taskID|prereqID
+void TaskGraph::saveToFile(std::ostream& out) {
+    GraphNode* node = head;
+    while (node != nullptr) {
+        IntNode* pointer = node->prereqs;
+        while (pointer != nullptr) {
+            out << "DEP|" << node->taskID << "|" << pointer->data << "\n";
+            pointer = pointer->next;
+        }
+        node = node->next;
+    }
+}
+
 //Getter simple para visualizar y manejar
 int TaskGraph::getSize() {
     return size;

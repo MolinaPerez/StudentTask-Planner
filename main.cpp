@@ -5,6 +5,7 @@
 #include "HISTORY.h"
 #include "HASHTABLE.h"
 #include "TASKGRAPH.h"
+#include "STORAGE.h"
 
 using namespace std;
 
@@ -99,8 +100,19 @@ int main (){
     History history;
     HashTable hash;   // parallel structure: mirrors 'list', used for O(1) ID search
     TaskGraph taskGraph;   // grafo de dependencias entre tareas (hito #4)
-    
+
+    const string DATA_FILE = "planner_data.txt";   // archivo de persistencia (hito #5)
+
     cout << "Welcome to Sort & Sweet. Your personal academic task planner." << endl << "Let's get started!" << endl;
+
+    // Cargar datos previos (si existen) al iniciar.
+    int loaded = loadData(DATA_FILE, list, hash, taskGraph);
+    if (loaded > 0) {
+        cout << endl << "Se cargaron " << loaded << " tarea(s) desde " << DATA_FILE << "." << endl;
+    } else {
+        cout << endl << "No se encontraron datos previos. Empezando de cero." << endl;
+    }
+
     do {
         cout << endl;
         cout << "Consider the following for your planner: " << endl;
@@ -371,7 +383,13 @@ int main (){
             }
 
             case 9: {
-                cout << endl << "Thank you for your time" << endl;
+                // Guardar datos antes de salir (persistencia automatica, hito #5).
+                if (saveData(DATA_FILE, list, taskGraph)) {
+                    cout << endl << "Datos guardados en " << DATA_FILE << "." << endl;
+                } else {
+                    cout << endl << "Aviso: no se pudieron guardar los datos." << endl;
+                }
+                cout << "Thank you for your time" << endl;
                 return 0;
             }
 
@@ -379,6 +397,9 @@ int main (){
                 break;
         }
     } while (option != 9);
+
+    // Salida de respaldo (no deberia alcanzarse normalmente): tambien guarda.
+    saveData(DATA_FILE, list, taskGraph);
     cout << endl << "Thank you for your time" << endl;
     return 0;
 }

@@ -2,6 +2,7 @@
 #define TASKGRAPH_H
 
 #include "HASHTABLE.h"
+#include <iosfwd>
 
 // Chain list de IDs, para teenr presente los prerequisitos de una tarea.
 struct IntNode {
@@ -46,6 +47,7 @@ public:
     void showMissingPrereqs(int taskID, HashTable& hash);
 
     void showGraph(HashTable& hash);
+    void saveToFile(std::ostream& out);  // escribe cada arista como linea "DEP|task|prereq"
     int getSize();
 };
 
