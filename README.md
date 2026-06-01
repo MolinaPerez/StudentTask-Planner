@@ -23,6 +23,18 @@ Furthermore, the point of this project was to practice and apply all we've learn
 
 **Save Data**- For the program persistence there is a file located within the program directory as planner_data.txt, be sure not to delete it.
 
+## How to Use
+Upon opening the program, you'll be met with a menu with 9 options:
+**1. Add a Task-** User must input Task information such as Task ID, Title, Description, Course, Priority, and Task Due Date which is then added to the Task List.
+**2. Remove a Task-** Asks for the ID of the unwanted task to delete.
+**3. See Full Planner-**  Prints list of tasks on screen.
+**4. Search for a Specific Task-** Asks for specific Task ID to locate and if present, prints Task to screen. 
+**5. See Planner History-** Prints Undo pile into terminal and shows menu for undoing and redoing changes made in this menu.
+**6. Mark a Task as Completed-** Asks for Task ID to mark it as completed.
+**7. Add a Dependency between Tasks-** Asks for the ID of the Task that will depend on another task and then for the ID of the task that will be linked to it.
+**8. Show Dependency Graph-** Shows Tasks and their dependencies.
+**9. Close Program-** Closes program.
+
 ## How to Compile and Run
 To be able to compile and run this program, you must run the following commands using g++ (for transparency, this was used in the VsCode terminals):
 
