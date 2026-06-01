@@ -11,7 +11,7 @@ It allows for editing via a history composed of two stacks that behaves like the
 
 This will all be accessible via the menu that displays on the system terminal.
 
-Furthermore, the point of this project was to practice and apply all we've learned in our endeavors to understand Data Structures. The concept of tasks and lists lend themselves quite well to linked lists and its many forms. We approached this by making sure to select feautures that we could link to the data structures targets intended for practice.
+Furthermore, the point of this project was to practice and apply all we've learned in our endeavors to understand Data Structures. The concept of tasks and lists lend themselves quite well to linked lists and its many forms. We approached this by making sure to select features that we could link to the data structure targets intended for practice.
 
 ## Features
 **History**- Undo/Redo: Allows for undoing and redoing changes made to the data.
