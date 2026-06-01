@@ -1,7 +1,9 @@
 # Welcome to the Sort & Sweet Student Task Manager:
 ## Description
 
-This is terminal-based software that utilizes an ensemble of data structures to process user-created tasks for your convenience. 
+This is terminal-based software that utilizes an ensemble of data structures to process user-created tasks for your convenience.
+
+This project was built with C++ on the Visual Studio Code code editor
 
 The purpose of this program is to allow students to have an environment where they can organize their pending work load in a digestible manner that may help with decision fatigue and overall productivity. 
 
@@ -36,3 +38,6 @@ g++ -o planner main.cpp HASHTABLE.cpp HISTORY.cpp STORAGE.cpp TASK.cpp TASKGRAPH
 ## Collaborators
 - (Alex Molina Perez) https://github.com/MolinaPerez
 - (Gustavo Ramírez Renta) https://github.com/FlanMan04
+
+## License
+This project is licensed under the MIT License - see the License.txt file for details.
