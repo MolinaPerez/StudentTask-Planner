@@ -34,5 +34,5 @@ g++ -o planner main.cpp HASHTABLE.cpp HISTORY.cpp STORAGE.cpp TASK.cpp TASKGRAPH
 g++ -o planner main.cpp HASHTABLE.cpp HISTORY.cpp STORAGE.cpp TASK.cpp TASKGRAPH.cpp TASKLIST.cpp -std=c++17 && ./planner
 ```
 ## Collaborators
-** https://github.com/MolinaPerez
-** https://github.com/FlanMan04
+**https://github.com/MolinaPerez**
+**https://github.com/FlanMan04**
