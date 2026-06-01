@@ -36,8 +36,8 @@ g++ -o planner main.cpp HASHTABLE.cpp HISTORY.cpp STORAGE.cpp TASK.cpp TASKGRAPH
 g++ -o planner main.cpp HASHTABLE.cpp HISTORY.cpp STORAGE.cpp TASK.cpp TASKGRAPH.cpp TASKLIST.cpp -std=c++17 && ./planner
 ```
 ## Collaborators
-- (Alex Molina Perez) https://github.com/MolinaPerez
-- (Gustavo Ramírez Renta) https://github.com/FlanMan04
+- [Alex Molina Perez](https://github.com/MolinaPerez)
+- [Gustavo Ramírez Renta](https://github.com/FlanMan04)
 
 ## License
 This project is licensed under the MIT License - see the License.txt file for details.
