@@ -1,4 +1,13 @@
 # Welcome to the Sort & Sweet Student Task Manager:
+## Table of Contents
+- [Description](#description)
+- [Features](#features)
+- [How to Use](#how-to-use)
+- [How to Compile and Run](#how-to-compile-and-run)
+- [Collaborators](#collaborators)
+- [Credits](#credits)
+- [License](#license)
+
 ## Description
 
 This is terminal-based software that utilizes an ensemble of data structures to process user-created tasks for your convenience.
