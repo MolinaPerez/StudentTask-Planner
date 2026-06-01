@@ -74,4 +74,4 @@ g++ -o planner main.cpp HASHTABLE.cpp HISTORY.cpp STORAGE.cpp TASK.cpp TASKGRAPH
 - COMP 3075- "Introduction to Data Structures", Alcibiades Bustillo Zarate, Recinto Universitario de Mayagüez 
 
 ## License
-This project is licensed under the MIT License - see the License.txt file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
