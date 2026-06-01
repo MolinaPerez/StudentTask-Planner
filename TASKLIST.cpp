@@ -2,6 +2,12 @@
 #include <stdexcept>
 #include <iostream>
 
+// TASKLIST.h / TASKLIST.cpp
+// Singly linked list of Task objects. Supports adding, removing, searching,
+// and displaying tasks sorted by priority without modifying the list.
+// Authors: Alex Molina Perez, Gustavo Ramirez Renta
+// COMP 3075 - Introduction to Data Structures, RUM
+
 TaskList::TaskList() {
     head = nullptr;
     size = 0;

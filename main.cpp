@@ -83,6 +83,7 @@ bool isValidDate(string d) {
 }
 
 int main (){
+    // ASCII Art Banner
     cout << "  /$$$$$$                        /$$            /$$$            /$$$$$$                                      /$$" << endl;
     cout << " /$$__  $$                      | $$           /$$ $$          /$$__  $$                                    | $$" << endl;
     cout << "| $$  \\__/  /$$$$$$   /$$$$$$  /$$$$$$        |  $$$          | $$  \\__/ /$$  /$$  /$$  /$$$$$$   /$$$$$$  /$$$$$$" << endl;
@@ -99,13 +100,13 @@ int main (){
     TaskList list;
     History history;
     HashTable hash;   // parallel structure: mirrors 'list', used for O(1) ID search
-    TaskGraph taskGraph;   // grafo de dependencias entre tareas (hito #4)
+    TaskGraph taskGraph;   // Dependence Graph Between Tasks (hito #4)
 
-    const string DATA_FILE = "planner_data.txt";   // archivo de persistencia (hito #5)
+    const string DATA_FILE = "planner_data.txt";   // Persistence File (hito #5)
 
     cout << "Welcome to Sort & Sweet. Your personal academic task planner." << endl << "Let's get started!" << endl;
 
-    // Cargar datos previos (si existen) al iniciar.
+    //Load previous data (if available) on startup.
     int loaded = loadData(DATA_FILE, list, hash, taskGraph);
     if (loaded > 0) {
         cout << endl << "Se cargaron " << loaded << " tarea(s) desde " << DATA_FILE << "." << endl;
@@ -205,9 +206,9 @@ int main (){
                 try {
                    Task removed = list.removeTask(ID);
                     hash.remove(ID);                       // keep hash in sync
-                    // NO se limpia el grafo aqui: dejamos las aristas vivas para que
-                    // el undo del REMOVE pueda restaurarlas gratis. Si el usuario nunca
-                    // hace undo, queda basura visual en el grafo (asumido).
+                    //The graph is not cleared here: we leave the live edges so 
+                    //that the undo of REMOVE can restore them for free. If the 
+                    //user never undoes, visual garbage remains in the graph (assumed)."
                     cout << endl << "Task Removed Successfully" << endl;
                     history.record("REMOVE", removed);
                 }
@@ -321,7 +322,7 @@ int main (){
             }
 
             case 6: {
-                // Marcar tarea como completada SOLO si todos sus prereqs estan listos.
+                //Will mark task as completed ONLY if all of its prereqs are ready.
                 cout << "Enter ID of task to mark as completed: ";
                 while (!(cin >> ID) || ID < 0) {
                     cout << endl;
@@ -349,7 +350,7 @@ int main (){
             }
 
             case 7: {
-                // anadir dependencia: taskID depende de prereqID
+                // Add Dependency: TaskID depends on PrereqsID
                 int prereqID = 0;
                 cout << "Add Dependency" << endl;
                 cout << "Task ID (la que depende): ";
@@ -376,14 +377,14 @@ int main (){
             }
 
             case 8: {
-                // Mostrar grafo de dependencias
+                // Show Dependency Graph
                 cout << endl;
                 taskGraph.showGraph(hash);
                 break;
             }
 
             case 9: {
-                // Guardar datos antes de salir (persistencia automatica, hito #5).
+                // Save Data before closing (Automatic Persistence, hito #5).
                 if (saveData(DATA_FILE, list, taskGraph)) {
                     cout << endl << "Datos guardados en " << DATA_FILE << "." << endl;
                 } else {
@@ -398,7 +399,7 @@ int main (){
         }
     } while (option != 9);
 
-    // Salida de respaldo (no deberia alcanzarse normalmente): tambien guarda.
+    // Fallback exit (should not normally be reached): also saves.
     saveData(DATA_FILE, list, taskGraph);
     cout << endl << "Thank you for your time" << endl;
     return 0;

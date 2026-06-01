@@ -6,6 +6,13 @@
 #include "HASHTABLE.h"
 #include "TASKGRAPH.h"
 
+// HISTORY.h / HISTORY.cpp
+// Undo/redo system implemented as two stacks of recorded actions.
+// Supports reversing and re-applying ADD and REMOVE operations across
+// the TaskList, HashTable, and TaskGraph simultaneously.
+// Authors: Alex Molina Perez, Gustavo Ramirez Renta
+// COMP 3075 - Introduction to Data Structures, RUM
+
 struct actionNode{
     string action;
     Task data;

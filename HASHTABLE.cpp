@@ -3,6 +3,12 @@
 
 using namespace std;
 
+// HASHTABLE.h / HASHTABLE.cpp
+// Hash table using separate chaining for O(1) average-time task lookup by ID.
+// Runs parallel to the TaskList to enable fast search without traversing the list.
+// Authors: Alex Molina Perez, Gustavo Ramirez Renta
+// COMP 3075 - Introduction to Data Structures, RUM
+
 HashTable::HashTable() {
     // Start every bucket as an empty
     for (int i = 0; i < BUCKET_COUNT; i++) {

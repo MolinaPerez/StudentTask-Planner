@@ -3,6 +3,12 @@
 
 #include "TASK.h"
 
+// HASHTABLE.h / HASHTABLE.cpp
+// Hash table using separate chaining for O(1) average-time task lookup by ID.
+// Runs parallel to the TaskList to enable fast search without traversing the list.
+// Authors: Alex Molina Perez, Gustavo Ramirez Renta
+// COMP 3075 - Introduction to Data Structures, RUM
+
 // HashNode is simply a node in a bucket
 // We use SEPARATE CHAINING for buckets
 // Multiple tasks whose IDs hash to the same bucket can coexist.

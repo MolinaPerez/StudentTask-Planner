@@ -1,6 +1,12 @@
 #include "TASK.h"
 #include <iostream>
 
+// TASK.h / TASK.cpp
+// Defines the Task class, the core data unit of the planner.
+// Each task holds an ID, title, description, course, priority, due date, and completion status.
+// Authors: Alex Molina Perez, Gustavo Ramirez Renta
+// COMP 3075 - Introduction to Data Structures, RUM
+
 Task::Task() { //No Parameters
     ID = 0;
     title = " ";

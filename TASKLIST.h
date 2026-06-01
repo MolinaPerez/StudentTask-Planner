@@ -3,6 +3,13 @@
 
 #include "TASK.h"
 #include <iosfwd>
+
+// TASKLIST.h / TASKLIST.cpp
+// Singly linked list of Task objects. Supports adding, removing, searching,
+// and displaying tasks sorted by priority without modifying the list.
+// Authors: Alex Molina Perez, Gustavo Ramirez Renta
+// COMP 3075 - Introduction to Data Structures, RUM
+
 struct Node {
     Task data;
     Node* next;

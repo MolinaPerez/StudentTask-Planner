@@ -5,13 +5,19 @@
 #include <stdexcept>
 using namespace std;
 
+// STORAGE.h / STORAGE.cpp
+// Handles saving and loading planner data to and from a local text file.
+// Tasks are stored as TASK|... lines and dependencies as DEP|... lines.
+// Authors: Alex Molina Perez, Gustavo Ramirez Renta
+// COMP 3075 - Introduction to Data Structures, RUM
+
 bool saveData(const string& filename, TaskList& list, TaskGraph& graph) {
     ofstream out(filename.c_str());
     if (!out) {
         return false;   // no se pudo abrir para escribir
     }
-    list.saveToFile(out);    // primero las tareas (lineas TASK|...)
-    graph.saveToFile(out);   // despues las dependencias (lineas DEP|...)
+    list.saveToFile(out);    // First the Tasks (lineas TASK|...)
+    graph.saveToFile(out);   // Then the Dependencies (lineas DEP|...)
     out.close();
     return true;
 }
@@ -19,7 +25,7 @@ bool saveData(const string& filename, TaskList& list, TaskGraph& graph) {
 int loadData(const string& filename, TaskList& list, HashTable& hash, TaskGraph& graph) {
     ifstream in(filename.c_str());
     if (!in) {
-        return 0;   // archivo no existe (primera ejecucion): empezar de cero
+        return 0;   // file does not exist (primera ejecucion): start from zero
     }
 
     int taskCount = 0;
@@ -42,7 +48,7 @@ int loadData(const string& filename, TaskList& list, HashTable& hash, TaskGraph&
             getline(ss, due, '|');
             getline(ss, completeStr, '|');
 
-            // Manejo de error: si la linea esta corrupta, la saltamos sin reventar.
+            // Error Handling : If the line is corrupt, we skip it without crashing.
             try {
                 int id   = stoi(idStr);
                 int prio = stoi(prioStr);
@@ -55,7 +61,7 @@ int loadData(const string& filename, TaskList& list, HashTable& hash, TaskGraph&
                 cout << "Aviso: linea de tarea corrupta ignorada." << endl;
             }
         }
-        // --- Dependencia ---
+        // --- Dependence ---
         else if (type == "DEP") {
             string aStr, bStr;
             getline(ss, aStr, '|');
@@ -63,12 +69,12 @@ int loadData(const string& filename, TaskList& list, HashTable& hash, TaskGraph&
             try {
                 int a = stoi(aStr);
                 int b = stoi(bStr);
-                graph.addDependency(a, b, hash);   // valida existencia y ciclos solo
+                graph.addDependency(a, b, hash);   // Validates Existence and Cycles only
             } catch (const exception&) {
                 cout << "Aviso: linea de dependencia corrupta ignorada." << endl;
             }
         }
-        // cualquier otro prefijo se ignora silenciosamente
+        // any other prefix is silently ignored
     }
     in.close();
     return taskCount;

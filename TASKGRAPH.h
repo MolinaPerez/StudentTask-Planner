@@ -4,18 +4,26 @@
 #include "HASHTABLE.h"
 #include <iosfwd>
 
-// Chain list de IDs, para teenr presente los prerequisitos de una tarea.
+// TASKGRAPH.h / TASKGRAPH.cpp
+// Directed graph of task dependencies. Each edge taskID -> prereqID means
+// taskID cannot be marked complete until prereqID is finished.
+// Uses DFS cycle detection to prevent circular dependencies.
+// Authors: Alex Molina Perez, Gustavo Ramirez Renta
+// COMP 3075 - Introduction to Data Structures, RUM
+
+// Linked list of IDs, used to track the prerequisites of a task.
 struct IntNode {
     int data;
     IntNode* next;
 };
 
-// GraphNode es una tarea y la lista de IDs de los que depende. (Encadenando la tarea especifica a esos IDs especificos y requeridos)
-// Si existe esta conexion: taskID -> prereqID = "taskID necesita prereqID hecho primero".
+// GraphNode represents a task and the list of IDs it depends on.
+// (Linking the specific task to its required prerequisite IDs)
+// If this connection exists: taskID -> prereqID = "taskID needs prereqID done first".
 struct GraphNode {
     int taskID;
     IntNode* prereqs;
-    bool visited;          // Search Algorith Depth First Search para recorrer la lista de abajao hacia arriba. (El bool funciona para los ciclos)
+    bool visited;          // Used by the Depth First Search algorithm to traverse the list and detect cycles.
     GraphNode* next;
 };
 
@@ -25,29 +33,29 @@ private:
     int size;
 
     GraphNode* findNode(int taskID);
-    void resetVisited();                       // Resetea el bool para todo nodo para comenzar otro ciclo
-    bool canReach(int from, int target);       // DFS: "from" hacia "target"
+    void resetVisited();                       // Resets the visited flag on every node before starting a new traversal
+    bool canReach(int from, int target);       // DFS: can we reach "target" from "from"
 
 public:
     TaskGraph();
     ~TaskGraph();
 
-    // Agrega una dependencia a una tarea: taskID -> prereqID.
-    // Tira falso si: misma ID, ID inexistente, duplicado, o se culmina un ciclo.
+    // Adds a dependency to a task: taskID -> prereqID.
+    // Returns false if: same ID, nonexistent ID, duplicate, or would close a cycle.
     bool addDependency(int taskID, int prereqID, HashTable& hash);
 
-    // Borra taskID y cualquier referencia a el (llamar al eliminar una tarea).
+    // Removes taskID and any reference to it (call this when deleting a task).
     void removeAllInvolving(int taskID);
 
-    // Tira true si todos los prereqs existen en hashTABLE y estan marcados como completados.
+    // Returns true if all prereqs exist in the hash table and are marked as complete.
     bool canComplete(int taskID, HashTable& hash);
 
-    // Imprime los prereqs que aun no estan completos (o que fueron eliminados).
-    // Util para informarle al usuario que le falta antes de poder completar la tarea.
+    // Prints the prereqs that are not yet complete (or have been deleted).
+    // Useful for telling the user what they still need before completing a task.
     void showMissingPrereqs(int taskID, HashTable& hash);
 
     void showGraph(HashTable& hash);
-    void saveToFile(std::ostream& out);  // escribe cada arista como linea "DEP|task|prereq"
+    void saveToFile(std::ostream& out);  // writes each edge as a line "DEP|task|prereq"
     int getSize();
 };
 

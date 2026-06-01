@@ -2,13 +2,20 @@
 #include <iostream>
 using namespace std;
 
+// TASKGRAPH.h / TASKGRAPH.cpp
+// Directed graph of task dependencies. Each edge taskID -> prereqID means
+// taskID cannot be marked complete until prereqID is finished.
+// Uses DFS cycle detection to prevent circular dependencies.
+// Authors: Alex Molina Perez, Gustavo Ramirez Renta
+// COMP 3075 - Introduction to Data Structures, RUM
+
 TaskGraph::TaskGraph() {
     head = nullptr;
     size = 0;
 }
 
 TaskGraph::~TaskGraph() {
-    // Deconstrcutor general para liberar el GraphNode y sus prerequisitos.
+    // General Destructor to free the GraphNode and its prerequisites.
     while (head != nullptr) {
         GraphNode* tmp = head;
         head = head->next;
@@ -38,7 +45,7 @@ void TaskGraph::resetVisited() {
     }
 }
 
-// DFS: ¿desde 'from' alcanzo 'target' siguiendo aristas?
+// DFS: can we reach 'target' from 'from' by following edges?
 bool TaskGraph::canReach(int from, int target) {
     GraphNode* node = findNode(from);
     if (node == nullptr) return false;
@@ -69,11 +76,11 @@ bool TaskGraph::addDependency(int taskID, int prereqID, HashTable& hash) {
         }
     }
 
-    // Se formo un ciclo? Si prereqID llega a taskID, el new branch cierra.
+    // Would this form a cycle? If prereqID can reach taskID, the new edge would close a loop.
     resetVisited();
     if (canReach(prereqID, taskID)) return false;
 
-    // crear el nodo de taskID si no existe
+    // Creates the TaskID node if it doesn't exist
     if (node == nullptr) {
         node = new GraphNode;
         node->taskID = taskID;
@@ -84,7 +91,7 @@ bool TaskGraph::addDependency(int taskID, int prereqID, HashTable& hash) {
         size++;
     }
 
-    // insertar prereqID en la cabeza de la lista de prereqs
+    // insert prereqID in the head of the prerequisite list
     IntNode* newPrereq = new IntNode;
     newPrereq->data = prereqID;
     newPrereq->next = node->prereqs;
@@ -93,7 +100,7 @@ bool TaskGraph::addDependency(int taskID, int prereqID, HashTable& hash) {
 }
 
 void TaskGraph::removeAllInvolving(int taskID) {
-    // 1) borrar el nodo de taskID si existe
+    // 1) delete the taskID node if it exists
     GraphNode* pointer = head;
     GraphNode* prev = nullptr;
     while (pointer != nullptr) {
@@ -110,10 +117,10 @@ void TaskGraph::removeAllInvolving(int taskID) {
             break;
         }
         prev = pointer;
-        pointer = pointer->next; //recolocar el puntero para que no s equede colgando
+        pointer = pointer->next; //relocates the pointer to avoid it from hanging
     }
 
-    // 2) quitar taskID de las listas de prereqs de los demas nodos
+    // 2) remove taskID from the prereq lists of all other nodes
     GraphNode* node = head;
     while (node != nullptr) {
         IntNode* prereqPointer = node->prereqs;
@@ -136,7 +143,7 @@ void TaskGraph::removeAllInvolving(int taskID) {
 
 bool TaskGraph::canComplete(int taskID, HashTable& hash) {
     GraphNode* node = findNode(taskID);
-    if (node == nullptr) return true;   // sin prereqs -> se puede completar sin pasar por ningun proceso anterior
+    if (node == nullptr) return true;   // no prerequisites -> can be completed without going through any prior task"
 
     IntNode* pointer = node->prereqs;
     while (pointer != nullptr) {
@@ -148,12 +155,12 @@ bool TaskGraph::canComplete(int taskID, HashTable& hash) {
     return true;
 }
 
-// Recorre los prereqs y, por cada uno que no este completo (o no exista),
-// imprime una linea para que el usuario sepa que le hace falta.
+// Iterates through prerequisites and, for each one that isn't complete (or no longer exists),
+// prints a line so the user knows what they still need to finish.
 void TaskGraph::showMissingPrereqs(int taskID, HashTable& hash) { 
-    // Para caso 6 en el menu, si los prerequisitos no estan completados se llama esta funcion para demostrar cuales falta.
+    // Called from menu option 6 when prerequisites are incomplete, to show the user which ones are still missing.
     GraphNode* node = findNode(taskID);
-    if (node == nullptr) return;   // no tiene prereqs registrados, nada que mostrar
+    if (node == nullptr) return;   // Has no prerequisites registered, nothing to show
 
     IntNode* pointer = node->prereqs;
     while (pointer != nullptr) {
@@ -166,7 +173,7 @@ void TaskGraph::showMissingPrereqs(int taskID, HashTable& hash) {
         pointer = pointer->next;
     }
 }
-//Visualizacion de el grafo 
+//Graph Visualization
 void TaskGraph::showGraph(HashTable& hash) {
     cout << "--- Grafo de dependencias (" << size << " tareas) ---" << endl;
     if (head == nullptr) {
@@ -194,7 +201,7 @@ void TaskGraph::showGraph(HashTable& hash) {
         node = node->next;
     }
 }
-// Escribe cada arista del grafo al stream, una por linea: DEP|taskID|prereqID
+// Writes each graph edge to the stream, one per line: DEP|taskID|prereqID
 void TaskGraph::saveToFile(std::ostream& out) {
     GraphNode* node = head;
     while (node != nullptr) {
@@ -207,7 +214,7 @@ void TaskGraph::saveToFile(std::ostream& out) {
     }
 }
 
-//Getter simple para visualizar y manejar
+// Simple getter for display and management purposes"
 int TaskGraph::getSize() {
     return size;
 }

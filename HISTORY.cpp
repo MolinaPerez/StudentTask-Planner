@@ -2,6 +2,13 @@
 #include <stdexcept>
 #include <iostream>
 
+// HISTORY.h / HISTORY.cpp
+// Undo/redo system implemented as two stacks of recorded actions.
+// Supports reversing and re-applying ADD and REMOVE operations across
+// the TaskList, HashTable, and TaskGraph simultaneously.
+// Authors: Alex Molina Perez, Gustavo Ramirez Renta
+// COMP 3075 - Introduction to Data Structures, RUM
+
 History::History(){
     undoTop = nullptr;
     redoTop = nullptr;
@@ -40,15 +47,15 @@ bool History::undo(TaskList& list, HashTable& hash, TaskGraph& graph){ //Also in
 
     actionNode* temp= undoTop;
 
-    if (undoTop->action == "ADD") {  // Deshacer un ADD = quitar la tarea de las 3 estructuras.
+    if (undoTop->action == "ADD") {  // Undo an ADD = remove the task from all 3 data structures.
         int ID = undoTop->data.getID();
         list.removeTask(ID);
         hash.remove(ID);
-        graph.removeAllInvolving(ID);   // limpiar fantasmas en el grafo (fix bug #1 y #2)
+        graph.removeAllInvolving(ID);   // clean up ghost edges in the graph (fix bug #1 and #2)
     }
-    else if (undoTop->action == "REMOVE"){ // Deshacer un REMOVE = poner la tarea de vuelta.
-        list.addTask(undoTop->data);     // El grafo no se toca: como REMOVE no lo limpio,
-        hash.insert(undoTop->data);        //Siguen existiendo los prereqs de la tarea no se borran.
+    else if (undoTop->action == "REMOVE"){  // Undo a REMOVE = put the task back.
+        list.addTask(undoTop->data);        // The graph is not touched: since REMOVE didn't clean it,
+        hash.insert(undoTop->data);         // the task's prereq edges still exist and are preserved.
     }
 
     actionNode* redoNode = new actionNode;
@@ -69,15 +76,15 @@ bool History::redo(TaskList& list, HashTable& hash, TaskGraph& graph){
 
     actionNode* temp = redoTop;
 
-    if (redoTop->action == "ADD") { // Rehacer un ADD = re-agregar a list y hash.
-        list.addTask(redoTop->data);   // El grafo no se toca: ya estaba limpio
-        hash.insert(redoTop->data);    // desde el undo previo.
+    if (redoTop->action == "ADD") { // Redo an ADD = re-add the task to list and hash.
+        list.addTask(redoTop->data);   // The graph is not touched: it was already clean
+        hash.insert(redoTop->data);    // from the previous undo.
     }
     else if (redoTop->action == "REMOVE") {
         int ID = redoTop->data.getID();
         list.removeTask(ID);
         hash.remove(ID);
-        graph.removeAllInvolving(ID);   // re-quitar fantasmas del grafo (TAreas que se quedan colgantes por ciertos prereqs)
+        graph.removeAllInvolving(ID);   // re-remove ghost edges from the graph (tasks left dangling by certain prereqs)
     }
     actionNode* undoNode = new actionNode;
     undoNode->action = redoTop->action;
