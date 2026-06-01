@@ -33,6 +33,6 @@ g++ -o planner main.cpp HASHTABLE.cpp HISTORY.cpp STORAGE.cpp TASK.cpp TASKGRAPH
 ```bash
 g++ -o planner main.cpp HASHTABLE.cpp HISTORY.cpp STORAGE.cpp TASK.cpp TASKGRAPH.cpp TASKLIST.cpp -std=c++17 && ./planner
 ```
-##Collaborators
+## Collaborators
 https://github.com/MolinaPerez
 https://github.com/FlanMan04
