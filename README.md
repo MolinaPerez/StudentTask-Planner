@@ -25,6 +25,7 @@ Furthermore, the point of this project was to practice and apply all we've learn
 
 ## How to Use
 Upon opening the program, you'll be met with a menu with 9 options:
+
 **1. Add a Task-** User must input Task information such as Task ID, Title, Description, Course, Priority, and Task Due Date which is then added to the Task List.
 
 **2. Remove a Task-** Asks for the ID of the unwanted task to delete.
